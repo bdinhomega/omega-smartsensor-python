@@ -1,0 +1,4 @@
+#!/usr/bin/env python
+
+python3 setup.py clean -all
+python3 setup.py sdist bdist_wheel

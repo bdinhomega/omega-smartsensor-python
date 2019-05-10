@@ -1,0 +1,4 @@
+/build/*
+/dist/*
+/omegasensor.egg-info/*
+/.idea/*
