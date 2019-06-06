@@ -314,7 +314,7 @@ _def = {
     R.OPERATING_TEMP:           {"Modbus": 0xf00e, "I2C": 0x1C,  "Access": _RO, "Data": _DataUInt16Lower},
     R.OPERATING_VOLTAGE:        {"Modbus": 0xf00e, "I2C": 0x1D,  "Access": _RO, "Data": _DataUInt16Upper},
     R.FAULT_PROCESS:            {"Modbus": 0xf00f, "I2C": 0x1E,  "Access": _RO, "Data": _DataUInt16Lower},
-    R.FAULT_CODE:               {"Modbus": 0xf00f, "I2C": 0x1F,  "Access": _RO, "Data": _DataUInt16Upper},
+    R.FAULT_CODE:               {"Modbus": 0xf00f, "I2C": 0x1E,  "Access": _RO, "Data": _DataUInt16Upper},
     R.EVENT_1_TIMER:            {"Modbus": 0xf010, "I2C": 0x20,  "Access": _RO, "Data": _DataUInt16},
     R.EVENT_2_TIMER:            {"Modbus": 0xf011, "I2C": 0x22,  "Access": _RO, "Data": _DataUInt16},
     R.SYSTEM_STATUS:            {"Modbus": 0xf012, "I2C": 0x24,  "Access": _RO, "Data": _SystemStatusSer},
