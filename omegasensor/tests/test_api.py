@@ -1,4 +1,4 @@
-from smartsensor import _def, _Serializer, R
+from omegasensor.smartsensor import _def, _Serializer, R
 
 
 def test_register_populated():

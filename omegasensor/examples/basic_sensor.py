@@ -3,17 +3,21 @@ from omegasensor import *
 
 
 def main():
-    bus = BusModbus('/dev/ttyACM0', SMARTSENSOR_MODBUS_ADDR)
+    # use Modbus interface
+    # bus = BusModbus('/dev/ttyACM0', SMARTSENSOR_MODBUS_ADDR)
+
+    # use I2C interface
+    bus = BusI2C(3, SMARTSENSOR_I2C_ADDR)
     ss = Smartsensor(bus)
 
     ss.soft_reset()
     ss.preset_config()
-    print("Firmware 0x%08x" % ss.read(R.FIRMARE_VERSION))
-    print("Device Id 0x%08x" % ss.read(R.DEVICE_ID))
-    print("Device %s" % ss.read(R.DEVICE_NAME))
+    print("Firmware: 0x%08x" % ss.read(R.FIRMARE_VERSION))
+    print("Device Id: 0x%08x" % ss.read(R.DEVICE_ID))
+    print("Device name: %s" % ss.read(R.DEVICE_NAME))
     sensor_cnt = ss.read(R.NUMBER_OF_SENSORS)
-    print("Onboard %d sensors" % sensor_cnt)
-    print("Onboard %d outputs" % ss.read(R.NUMBER_OF_OUTPUTS))
+    print("On-board %d sensors" % sensor_cnt)
+    print("On-board %d outputs" % ss.read(R.NUMBER_OF_OUTPUTS))
 
     sensor_units = [ss.sensor_unit(i) for i in range(sensor_cnt)]
 

@@ -111,35 +111,34 @@ class _ListSelectSer(_Serializer):
         return 2
 
 
-class _DataString32(_Serializer):
+class _StringSerializer(_Serializer):
     @staticmethod
     def unpack(value):
-        return bitstruct.unpack('t%d' % (__class__.size() * 8), value)[0].split('\0')[0]
+        return ''.join([chr(i) for i in value]).split('\0')[0]
 
     @staticmethod
+    def pack_with_size(data, size):
+        assert (type(data) is str)
+        bytes = [ord(c) for c in data][:size]
+        if len(bytes) < size:
+            bytes.append(0)  # null terminated
+        return bytearray(bytes)
+
+
+class _DataString32(_StringSerializer):
+    @staticmethod
     def pack(data):
-        assert(type(data) is str)
-        return bitstruct.pack('t%d' % (__class__.size() * 8), data + '\0')  # last char is null
+        return _StringSerializer.pack_with_size(data, __class__.size())
 
     @staticmethod
     def size():
         return 32
 
 
-class _DataUnit(_Serializer):
-    @staticmethod
-    def unpack(value):
-        return ''.join([chr(i) for i in value]).split('\0')[0]
-
+class _DataUnit(_StringSerializer):
     @staticmethod
     def pack(data):
-        assert(type(data) is str)
-        bytes = [ord(c) for c in data][:__class__.size()]
-        if len(bytes) < __class__.size():
-            bytes.append(0)       # null terminated
-        else:
-            bytes[__class__.size()-1] = 0
-        return bytearray(bytes)
+        return _StringSerializer.pack_with_size(data, __class__.size())
 
     @staticmethod
     def size():
