@@ -34,8 +34,12 @@ class Smartsensor:
         """
             Configure sensor for Basic configuration for most application
         """
-        self.ss.write(R.EVENT_1_TIME_BASE, 1)
-        self.ss.write(R.INTERRUPT_CONTROL, 0)
+        self.ss.write(R.EVENT_0_TIME_BASE, 1)
+        self.ss.write(R.INTERRUPT_CONTROL,
+                      InterruptEnable.INTR_DATA_READY |
+                      InterruptEnable.INTR_SENSOR_CHANGE |
+                      InterruptEnable.INTR_POWER_CHANGE |
+                      InterruptEnable.INTR_HEALTH_CHANGE)
         self.ss.write(R.SYSTEM_CONTROL,
                       SystemControl.ENABLE_SENSOR_CHANGE_LOG |
                       SystemControl.ENABLE_POWER_CHANGE_LOG |
@@ -102,8 +106,8 @@ class Smartsensor:
         :param sensor_num: index
         :return: sensor reading in float
         """
-        return self.ss.read([R.SENSOR_1_DATA, R.SENSOR_2_DATA,
-                             R.SENSOR_3_DATA, R.SENSOR_4_DATA][sensor_num])
+        return self.ss.read([R.SENSOR_0_DATA, R.SENSOR_1_DATA,
+                             R.SENSOR_2_DATA, R.SENSOR_3_DATA][sensor_num])
 
     def sensor_unit(self, sensor_num) -> str:
         """
@@ -111,8 +115,8 @@ class Smartsensor:
         :param sensor_num: index
         :return: unit in string
         """
-        return self.ss.read([R.SENSOR_1_UNIT, R.SENSOR_2_UNIT,
-                             R.SENSOR_3_UNIT, R.SENSOR_4_UNIT][sensor_num])
+        return self.ss.read([R.SENSOR_0_UNIT, R.SENSOR_1_UNIT,
+                             R.SENSOR_2_UNIT, R.SENSOR_3_UNIT][sensor_num])
 
     def sensor_descriptor(self, sensor_num) -> SensorDescriptor:
         """
@@ -120,8 +124,8 @@ class Smartsensor:
         :param sensor_num: index
         :return: sensor descriptor
         """
-        return self.ss.read([R.SENSOR_1_DESCRIPTOR, R.SENSOR_2_DESCRIPTOR,
-                             R.SENSOR_3_DESCRIPTOR, R.SENSOR_4_DESCRIPTOR][sensor_num])
+        return self.ss.read([R.SENSOR_0_DESCRIPTOR, R.SENSOR_1_DESCRIPTOR,
+                             R.SENSOR_2_DESCRIPTOR, R.SENSOR_3_DESCRIPTOR][sensor_num])
 
     def sensor_type(self, sensor_num) -> MeasurementType:
         """

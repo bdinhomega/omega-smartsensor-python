@@ -51,6 +51,38 @@
     if __name__ == "__main__":    
         main()  
   
+### Enable Software I2C interface:
+
+(supports clock stretching for SmartSensor's I2C Interface)
+
+Open config.txt
+```
+sudo nano /boot/config.txt
+```
+
+Add the following entry to the file
+```
+dtoverlay=i2c-gpio,bus=3
+```
+
+Save the file by hitting Ctrl+O. Enter. Reboot the Pi.
+
+A new I2C interface can be found at `/dev/i2c-3`
+
+SDA is BCM23 (header pin 16)
+
+CLK is BCM24 (header pin 18)
+
+Software I2C requires manual pull-up resistors of about 2.2k on SDA and CLK to Vcc. It may be possible to enable GPIO internal pull-up by the following commands:
+
+```
+# enable internal pull-up on pin BCM23
+gpio -g mode 23 up
+# enable internal pull-up on pin BCM24
+gpio -g mode 24 up
+```
+
+
 ## Examples    
     
  Examples can be found in SDK Example directory  

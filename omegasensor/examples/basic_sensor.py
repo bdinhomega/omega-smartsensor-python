@@ -15,15 +15,15 @@ def main():
     print("Firmware: 0x%08x" % ss.read(R.FIRMARE_VERSION))
     print("Device Id: 0x%08x" % ss.read(R.DEVICE_ID))
     print("Device name: %s" % ss.read(R.DEVICE_NAME))
-    sensor_cnt = ss.read(R.NUMBER_OF_SENSORS)
-    print("On-board %d sensors" % sensor_cnt)
-    print("On-board %d outputs" % ss.read(R.NUMBER_OF_OUTPUTS))
+    io_count = ss.read(R.IO_COUNT)
+    print("On-board %d sensors" % io_count.num_of_sensors)
+    print("On-board %d outputs" % io_count.num_of_outputs)
 
-    sensor_units = [ss.sensor_unit(i) for i in range(sensor_cnt)]
+    sensor_units = [ss.sensor_unit(i) for i in range(io_count.num_of_sensors)]
 
     while True:
         print("Time: ", ss.current_time_str())
-        for i in range(sensor_cnt):
+        for i in range(io_count.num_of_sensors):
             print("%0.2f" % ss.sensor_reading(i),
                   " %s" % sensor_units[i],
                   "\t", end='')
