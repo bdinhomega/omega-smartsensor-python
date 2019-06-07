@@ -2,6 +2,7 @@ import bitstruct, struct
 import threading
 import logging
 from .bus import Bus
+from .interrupt import *
 from .registers import *
 
 
@@ -376,7 +377,7 @@ _def = {
     R.EVENT_1_TIMER:            {"Modbus": 0xf011, "I2C": 0x22, "Access": _RO, "Data": _DataUInt16},
     R.SYSTEM_STATUS:            {"Modbus": 0xf012, "I2C": 0x24,  "Access": _RO, "Data": _SystemStatusSer},
     R.TRIGGER_REQUESTS:         {"Modbus": 0xf013, "I2C": 0x26,  "Access": _RW, "Data": _DataUInt16}, # Trigger
-    R.EXTRACT_I2C_TIME:         {"Modbus": 0xf014, "I2C": 0x28,  "Access": _RW, "Data": _DataUInt32},
+    R.EXTRACT_START_TIME:       {"Modbus": 0xf014, "I2C": 0x28, "Access": _RW, "Data": _DataUInt32},
     R.EXTRACT_END_TIME:         {"Modbus": 0xf015, "I2C": 0x2C,  "Access": _RW, "Data": _DataUInt32},
     R.NUMBER_OF_RECORDS:        {"Modbus": 0xf01b, "I2C": 0x36,  "Access": _RO, "Data": _DataUInt16},
     R.CURRENT_TIME:             {"Modbus": 0xf01c, "I2C": 0x38,  "Access": _RW, "Data": _DataTimeSer},
@@ -452,9 +453,17 @@ _def = {
 api_logger = logging.getLogger('[API]')
 api_logger.setLevel(logging.INFO)
 
+DEFAULT_HEARTBEAT_MAX_MISS  = 3
+
+## module global for inferring interrupt to corresponding object and its handler
+module_instances = []
 
 class Device:
-    def __init__(self, transport: Bus):
+    def __init__(self,
+                 transport: Bus,
+                 interrupt_pin: int = None,
+                 interrupt_callback = None,
+                 config: dict = {}):
         """
             Initialize smartsensor device
         :param transport: communication bus
@@ -462,6 +471,24 @@ class Device:
         self.trans = transport
         self.lock = threading.Lock()
         self._debug = False
+        self.intr_pin = None
+        self.sensor_attached = False
+        self.heartbeat_miss = 0
+        self.heartbeat_max_miss = config.get('HEARTBEAT_MAX_MISS', DEFAULT_HEARTBEAT_MAX_MISS)
+        if interrupt_pin and interrupt_callback:
+            self.intr_pin = interrupt_pin
+            self.user_callback = interrupt_callback
+            setup_interrupt(interrupt_pin, self.interrupt_handler)
+        module_instances.append(self)
+
+    def __del__(self):
+        """
+            Executes when the instance goes out of scope
+        :return:
+        """
+        if self.intr_pin:
+            remove_interrupt(self.intr_pin)
+        module_instances.remove(self)
 
     @property
     def debug(self):
@@ -474,6 +501,75 @@ class Device:
             api_logger.setLevel(logging.DEBUG)
         else:
             api_logger.setLevel(logging.INFO)
+
+    @staticmethod
+    def interrupt_handler(pin):
+        for instance in module_instances:
+            if instance.intr_pin == pin:
+                instance.handle_interrupt()
+
+    def handle_interrupt(self) -> None:
+        """
+            Handle logic when an interrupt is raised from the smartsensor
+        :return: None
+        """
+        if self.sensor_attached:
+            try:
+                intr_status = self.read(R.INTERRUPT_STATUS)
+                # alert user of the interrupt status
+                api_event = ApiEvent(intr_status)
+                self.user_callback(api_event)
+            except:
+                # failed to communicate
+                self.heartbeat_miss += 1
+                if self.heartbeat_miss > self.heartbeat_max_miss:
+                    self.sensor_attached = False
+                    api_event = ApiEvent.API_SENSOR_DETACHED
+                    self.user_callback(api_event)
+        else:
+            try:
+                sys_status = self.read(R.SYSTEM_STATUS)
+                if sys_status.device_ready:
+                    self.probe_init()
+                    self.sensor_attached = True
+                    self.heartbeat_miss = 0
+                    api_event = ApiEvent.API_SENSOR_ATTACHED
+                    self.user_callback(api_event)
+            except:
+                pass
+
+    def timeout_handler(self) -> None:
+        """
+            Handle logic when a heartbeat timeout is lapsed
+        :return:
+        """
+        pass
+
+    def probe_init(self):
+        intr_ctrl = self.read(R.INTERRUPT_CONTROL)
+        intr_ctrl |=    InterruptEnable.INTR_SENSOR_CHANGE |\
+                        InterruptEnable.INTR_POWER_CHANGE |\
+                        InterruptEnable.INTR_HEALTH_CHANGE |\
+                        InterruptEnable.INTR_DATA_READY |\
+                        InterruptEnable.INTR_FUNCTION_BLOCK |\
+                        InterruptEnable.INTR_LOG_DATA_READY
+        self.write(R.INTERRUPT_CONTROL, intr_ctrl)
+
+        sys_ctrl = self.read(R.SYSTEM_CONTROL)
+        sys_ctrl |= SystemControl.ENABLE_SENSOR_CHANGE_LOG | \
+                    SystemControl.ENABLE_POWER_CHANGE_LOG | \
+                    SystemControl.ENABLE_HEALTH_FAULT_LOG | \
+                    SystemControl.ENABLE_TIME_CHANGE_LOG | \
+                    SystemControl.ENABLE_EVENT_0_READ | \
+                    SystemControl.ENABLE_EVENT_0_LOG | \
+                    SystemControl.ENABLE_FUNCTION_BLOCK | \
+                    SystemControl.ENABLE_HEALTH_MONITOR | \
+                    SystemControl.ENABLE_LOG_OVERWRITE | \
+                    SystemControl.ENABLE_RTC
+        self.write(R.SYSTEM_CONTROL, sys_ctrl)
+
+        self.write(R.EXTRACT_START_TIME, 0)
+        self.write(R.EXTRACT_END_TIME, 0xffffffff)
 
     def read(self, register: R):
         """

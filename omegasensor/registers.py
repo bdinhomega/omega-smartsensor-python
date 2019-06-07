@@ -37,10 +37,10 @@ class SystemControl(_IntFlag):
     ENABLE_POWER_CHANGE_LOG = 1 << 1
     ENABLE_HEALTH_FAULT_LOG = 1 << 2
     ENABLE_TIME_CHANGE_LOG = 1 << 3
-    ENABLE_EVENT_1_READ = 1 << 4
-    ENABLE_EVENT_1_LOG = 1 << 5
-    ENABLE_EVENT_2_READ = 1 << 6
-    ENABLE_EVENT_2_LOG = 1 << 7
+    ENABLE_EVENT_0_READ = 1 << 4
+    ENABLE_EVENT_0_LOG = 1 << 5
+    ENABLE_EVENT_1_READ = 1 << 6
+    ENABLE_EVENT_1_LOG = 1 << 7
     ENABLE_EXTN_READ = 1 << 8
     ENABLE_EXTN_LOG = 1 << 9
     ENABLE_EXTN_RESET_EVENT_1 = 1 << 10
@@ -52,23 +52,37 @@ class SystemControl(_IntFlag):
 
 
 class InterruptSource(_IntFlag):
-    SENSOR_CHANGE_INTR = 0x0001
-    POWER_CHANGE_INTR = 0x0002
-    HEALTH_CHANGE_INTR = 0x0004
-    EVENT_1_INTR = 0x0008
-    EVENT_2_INTR = 0x0010
-    DATA_INVALID_INTR = 0x0020
-    FUNTION_BLOCK_INTR = 0x0040
+    SENSOR_CHANGE_INTR  = 0x0001
+    POWER_CHANGE_INTR   = 0x0002
+    HEALTH_CHANGE_INTR  = 0x0004
+    EVENT_0_INTR        = 0x0008
+    EVENT_1_INTR        = 0x0010
+    DATA_VALID_INTR     = 0x0020
+    FUNTION_BLOCK_INTR  = 0x0040
+    LOG_DATA_READY_INTR = 0x0080
+
+
+class ApiEvent(Enum):
+    API_SENSOR_CHANGE   =   InterruptSource.SENSOR_CHANGE_INTR.value
+    API_POWER_CHANGE    =   InterruptSource.POWER_CHANGE_INTR.value
+    API_HEALTH_CHANGE   =   InterruptSource.HEALTH_CHANGE_INTR.value
+    API_EVENT_0         =   InterruptSource.EVENT_0_INTR.value
+    API_EVENT_1         =   InterruptSource.EVENT_1_INTR.value
+    API_DATA_VALID      =   InterruptSource.DATA_VALID_INTR.value
+    API_FUNCTION_BLOCK  =   InterruptSource.FUNTION_BLOCK_INTR.value
+    API_LOG_DATA_READY  =   InterruptSource.LOG_DATA_READY_INTR.value
+    API_SENSOR_ATTACHED =   0x00010000
+    API_SENSOR_DETACHED =   0x00020000
 
 
 class InterruptEnable(_IntFlag):
     INTR_SENSOR_CHANGE = 1 << 0
     INTR_POWER_CHANGE = 1 << 1
     INTR_HEALTH_CHANGE = 1 << 2
-    INTR_EVENT_1 = 1 << 3
-    INTR_EVENT_2 = 1 << 4
+    INTR_EVENT_0 = 1 << 3
+    INTR_EVENT_1 = 1 << 4
     INTR_DATA_READY = 1 << 5
-    INTR_FUNCTION_ALARM = 1 << 6
+    INTR_FUNCTION_BLOCK = 1 << 6
     INTR_LOG_DATA_READY = 1 << 7
 
 
@@ -432,7 +446,7 @@ class R(Enum):
     TRIGGER_REQUESTS    = 'TRIGGER_REQUESTS'
 
     # Data Extraction
-    EXTRACT_I2C_TIME    = 'EXTRACT_I2C_TIME'
+    EXTRACT_START_TIME  = 'EXTRACT_START_TIME'
     EXTRACT_END_TIME    = 'EXTRACT_END_TIME'
     NUMBER_OF_RECORDS   = 'NUMBER_OF_RECORDS'
 

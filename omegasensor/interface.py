@@ -6,13 +6,41 @@ from .bus import Bus
 
 
 class Smartsensor:
-    def __init__(self, transport: Bus):
+    def __init__(self, transport: Bus,
+                 interrupt_pin: int = None,
+                 interrupt_callback = None):
         """
             Initialize interface for Smartsensor device with the provided transport
         :param transport: bus transport
+        :param interrupt_pin: specify the pin number (BCM pin for Rpi).
+        If None, interrupt processing will be disabled.
+        :param interrupt_callback: specify user callback function to be notified when
+        an event is signaled from the smartsensor.
+        If None, interrupt processing will be disabled.
+
+        @interrupt_enable attribute if disabled will mask interrupt processing events
+            and if enabled will allow user interrupt callback
         """
         assert(isinstance(transport, Bus))
-        self.ss = Device(transport)
+        # provide some initial configuration
+        self.config = {}
+        self.config['HEARTBEAT_MAX_MISS'] = 3
+        self.user_callback = interrupt_callback
+        self.interrupt_enable = False
+        self.ss = Device(transport,
+                         interrupt_pin,
+                         self._user_callback,
+                         self.config)
+
+    def _user_callback(self, event: ApiEvent):
+        """
+            This callback will invoke user callback, it will also
+            pass "this instance" as first param.
+        :param event: ApiEvent that the interrupt raises
+        :return: None
+        """
+        if self.interrupt_enable and self.user_callback:
+            self.user_callback(self, event)
 
     def read(self, register: R):
         """
@@ -45,8 +73,8 @@ class Smartsensor:
                       SystemControl.ENABLE_POWER_CHANGE_LOG |
                       SystemControl.ENABLE_HEALTH_FAULT_LOG |
                       SystemControl.ENABLE_TIME_CHANGE_LOG |
-                      SystemControl.ENABLE_EVENT_1_READ |
-                      SystemControl.ENABLE_EVENT_1_LOG |
+                      SystemControl.ENABLE_EVENT_0_READ |
+                      SystemControl.ENABLE_EVENT_0_LOG |
                       SystemControl.ENABLE_FUNCTION_BLOCK |
                       SystemControl.ENABLE_HEALTH_MONITOR |
                       SystemControl.ENABLE_LOG_OVERWRITE |
