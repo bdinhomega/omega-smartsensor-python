@@ -16,8 +16,8 @@ def main():
     print("Device Id: 0x%08x" % ss.read(R.DEVICE_ID))
     print("Device name: %s" % ss.read(R.DEVICE_NAME))
     io_count = ss.read(R.IO_COUNT)
-    print("On-board %d sensors" % io_count.num_of_sensors)
-    print("On-board %d outputs" % io_count.num_of_outputs)
+    print("On-board %d sensors" % io_count.sensors)
+    print("On-board %d outputs" % io_count.outputs)
 
     sensor_units = [ss.sensor_unit(i) for i in range(io_count.num_of_sensors)]
 

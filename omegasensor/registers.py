@@ -381,8 +381,8 @@ class OperatingParam:
 
 class IoCount:
     def __init__(self):
-        self.num_of_sensors = 0
-        self.num_of_outputs = 0
+        self.sensors = 0
+        self.outputs = 0
 
 
 class Calibration:

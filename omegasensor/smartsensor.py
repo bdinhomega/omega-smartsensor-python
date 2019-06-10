@@ -151,7 +151,7 @@ class _DataIoCount(_Serializer):
     @staticmethod
     def unpack(data):
         ret = IoCount()
-        ret.num_of_sensors, ret.num_of_outputs = bitstruct.unpack('>u8u8', data)
+        ret.sensors, ret.outputs = bitstruct.unpack('>u8u8', data)
         return ret
 
     @staticmethod
