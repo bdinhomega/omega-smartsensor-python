@@ -19,16 +19,17 @@ def example_callback(sensor, api_event: ApiEvent):
     if api_event == ApiEvent.API_SENSOR_DETACHED:
         print("Sensor Detached!")
     if api_event == ApiEvent.API_DATA_VALID:
-        print("Time: ", sensor.current_time_str())
-        io_count = ss.read(R.IO_COUNT)
-        sensor_time = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
-        print(sensor_time)
-        for i in range(io_count.sensors):
-            socketio.emit("sensor_data", {
-                "sensor_id": "sensor_%d" % i,
-                "sensor_time": sensor_time,
-                "sensor_value": sensor.sensor_reading(i),
-            })
+        if nClients > 0:
+            print("Time: ", sensor.current_time_str())
+            io_count = ss.read(R.IO_COUNT)
+            sensor_time = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
+            print(sensor_time)
+            for i in range(io_count.sensors):
+                socketio.emit("sensor_data", {
+                    "sensor_id": "sensor_%d" % i,
+                    "sensor_time": sensor_time,
+                    "sensor_value": sensor.sensor_reading(i),
+                })
 
 
 # use I2C interface
@@ -44,6 +45,8 @@ def index():
 
 @socketio.on('connect')
 def on_connect():
+    global nClients
+    nClients += 1
     fw = ss.read(R.FIRMARE_VERSION)
     dev_id = ss.read(R.DEVICE_ID)
     dev_name = ss.read(R.DEVICE_NAME)
@@ -77,7 +80,8 @@ def on_connect():
 
 @socketio.on('disconnect')
 def on_disconnect():
-    pass
+    global nClients
+    nClients -= 1
 
 
 def main():

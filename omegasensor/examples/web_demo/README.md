@@ -33,4 +33,6 @@ Run demo and start server:
 
 The demo is now accessible at `http://localhost:8080`
 
+_Hit F5 to refresh a couple times if page doesn't start right up_
+
 ![](../../../docs/web_demo.png)
