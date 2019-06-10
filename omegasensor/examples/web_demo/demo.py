@@ -82,7 +82,7 @@ def on_disconnect():
 
 def main():
     logging.getLogger('werkzeug').setLevel(logging.ERROR)
-    socketio.run(app, debug=False, host="0.0.0.0", port=5000)
+    socketio.run(app, debug=False, host="0.0.0.0", port=8080)
 
 
 if __name__ == "__main__":
