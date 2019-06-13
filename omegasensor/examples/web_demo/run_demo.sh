@@ -1,4 +1,4 @@
 #!/bin/bash
 
-export PYTHONPATH=$PYTHONPATH:$(pwd)/../../
-python3 demo.py
+export PYTHONPATH=$PYTHONPATH:$(dirname "$0")/../../../
+python3 $(dirname "$0")/demo.py
