@@ -393,10 +393,10 @@ _def = {
     R.EXTRACTED_DATA_2:         {"Modbus": 0xf02c, "I2C": 0x58, "Access": _RO, "Data": _DataFloat},
     R.EXTRACTED_DATA_3:         {"Modbus": 0xf02e, "I2C": 0x5C, "Access": _RO, "Data": _DataFloat},
 
-    R.SENSOR_0_DESCRIPTOR:      {"Modbus": 0xf030, "I2C": 0x60, "Access": _RO, "Data": _SensorDescriptorSer},
-    R.SENSOR_1_DESCRIPTOR:      {"Modbus": 0xf034, "I2C": 0x68, "Access": _RO, "Data": _SensorDescriptorSer},
-    R.SENSOR_2_DESCRIPTOR:      {"Modbus": 0xf038, "I2C": 0x70, "Access": _RO, "Data": _SensorDescriptorSer},
-    R.SENSOR_3_DESCRIPTOR:      {"Modbus": 0xf03c, "I2C": 0x78, "Access": _RO, "Data": _SensorDescriptorSer},
+    R.SENSOR_0_DESCRIPTOR:      {"Modbus": 0xf030, "I2C": 0x60, "Access": _RW, "Data": _SensorDescriptorSer},
+    R.SENSOR_1_DESCRIPTOR:      {"Modbus": 0xf034, "I2C": 0x68, "Access": _RW, "Data": _SensorDescriptorSer},
+    R.SENSOR_2_DESCRIPTOR:      {"Modbus": 0xf038, "I2C": 0x70, "Access": _RW, "Data": _SensorDescriptorSer},
+    R.SENSOR_3_DESCRIPTOR:      {"Modbus": 0xf03c, "I2C": 0x78, "Access": _RW, "Data": _SensorDescriptorSer},
 
     R.SENSOR_0_GAIN:            {"Modbus": 0xf060, "I2C": 0xC0, "Access": _RW, "Data": _DataFloat},
     R.SENSOR_1_GAIN:            {"Modbus": 0xf064, "I2C": 0xC8, "Access": _RW, "Data": _DataFloat},
