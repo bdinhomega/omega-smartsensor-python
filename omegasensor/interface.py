@@ -1,6 +1,6 @@
 import logging
 import time
-from .smartsensor import Device
+from .smartsensor import Device, DeviceType
 from .registers import *
 from .bus import Bus
 
@@ -162,6 +162,41 @@ class Smartsensor:
         :return: measurement type
         """
         return self.sensor_descriptor(sensor_num).meas_type
+
+    def get_sensor_digital_device_type(self, sensor_num) -> DigitalInputDeviceByte:
+        """Gets the device type byte and unpacks it into reset, enable and clock fields,
+            For devices that have these fields.
+        :param sensor_num: index of sensor
+        :return: object with reset,enable and clock members
+        """
+
+        device_type_byte= DeviceType()
+
+        return device_type_byte.unpack(self.sensor_descriptor(sensor_num).device_type)
+
+    def set_senor_digital_device_type(self, sensor_num, device_type:DigitalInputDeviceByte):
+        """ Packs the fields reset,enable and clock back into one byte.
+        Sets and writes the device type in the selected sensor descriptor. The descriptor
+        assumes a sensor type of DIGITAL IO. Below is a snippet of how to use this method
+
+        device_byte=ss.get_sensor_digital_device_type(0)
+        device_byte.reset=InputDeviceByte.I_O_SIGNAL.N_O_SOURCE
+        device_byte.enable = InputDeviceByte.I_O_SIGNAL.N_C_SOURCE
+        device_byte.clock = InputDeviceByte.I_O_SIGNAL.N_C_SINK
+        ss.set_senor_digital_device_type(0,device_byte)
+        ss.soft_reset()
+
+        :param sensor_num: index of sensor
+        :param device_type_byte: object with reset,enable and clock members
+        :return: void
+        """
+        device_type_byte = DeviceType()
+        descriptor = self.sensor_descriptor(sensor_num)
+        descriptor.device_type=device_type_byte.pack(device_type)
+        descriptor.config_sensor_type = SensorType.DigitalIO(descriptor.config_sensor_type)
+        self.write([R.SENSOR_0_DESCRIPTOR, R.SENSOR_1_DESCRIPTOR,
+                             R.SENSOR_2_DESCRIPTOR, R.SENSOR_3_DESCRIPTOR][sensor_num],descriptor)
+
 
     def system_status(self) -> SystemStatus:
         """

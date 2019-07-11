@@ -122,7 +122,7 @@ class MeasurementType(Enum):
     AdcCount = 0x31
 
 
-class SensorDevice(Enum):
+class SensorDevice:
     NULL = 0
     FILES = 1
     ADC = 2
@@ -133,6 +133,7 @@ class SensorDevice(Enum):
     MS5534 = 7
     MLX = 8
     UNKNOWN_1 = 15
+    OPEN_TC_DETECT = 16
     BUG = 210
     BUG_2 = 128
     BUG_3 = 208
@@ -358,7 +359,16 @@ class SensorDescriptor:
         self.config_assigned_channel = 0
         self.config_available = 0
         self.config_sensor_type = SensorType.InvalidSensor.InvalidSensor
-        self.device_type = SensorDevice.NULL
+        self.device_type = 0
+
+class DigitalInputDeviceByte:
+    """Provide structure to the device_type byte"""
+    def __init__(self):
+        super().__init__()
+        self.extra_bit = 0
+        self.reset = 0
+        self.enable = 0 #can be DIR and CLKB
+        self.clock = 0
 
 
 class ListSelect:
@@ -420,6 +430,32 @@ class DataTime:
         self.mins = 0
         self.secs = 0
 
+class InputDeviceByte:
+    """This byte can have any arbitrary structure, it is the device_type byte in the
+        sensor descriptor
+    """
+
+    class I_O_SIGNAL:
+        """contains the configurations for the device_type byte"""
+        DISABLE_BOTH = 0x0
+        ACTIVE_HI_BOTH = 0xa
+        ACTIVE_HI1_DISABLE0 = 0x8
+        ACTIVE_HI0_DISABLE1 = 0x2
+        ACTIVE_LO_BOTH = 0xf
+        ACTIVE_LO1_DISABLE0 = 0xc
+        ACTIVE_LO0_DISABLE1 = 0x3
+        """The above are used when configuring DIN
+        """
+        N_O_SINK = 0x0
+        N_C_SINK = 0x1
+        N_O_SOURCE = 0x2
+        N_C_SOURCE = 0x3
+        COMPARATOR_50mV = 0x4
+        COMPARATOR_100mV = 0x5
+        COMPARATOR_1V = 0x6
+        COMPARATOR_2V = 0x7
+        """The above is used for digital counters, rate, etc
+        """
 
 class R(Enum):
     # System Information

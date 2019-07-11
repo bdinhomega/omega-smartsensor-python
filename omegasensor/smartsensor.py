@@ -2,7 +2,7 @@ import bitstruct, struct
 import threading
 import logging
 from .bus import Bus
-from .interrupt import *
+#from .interrupt import *
 from .registers import *
 
 
@@ -259,7 +259,6 @@ class _SensorDescriptorSer(_Serializer):
         ] = bitstruct.unpack('u8b1b1b1b1u4b1b1b1b1u4u8', value)
         ret.meas_type = MeasurementType(ret.meas_type)
         ret.data_type = DataType(ret.data_type)
-        ret.device_type = SensorDevice(ret.device_type)
         return ret
 
     @staticmethod
@@ -277,12 +276,45 @@ class _SensorDescriptorSer(_Serializer):
                               data.config_assigned_channel,
                               data.config_available,
                               data.config_sensor_type.value,
-                              data.device_type.value,
+                              data.device_type,
                               )
     
     @staticmethod
     def size():
         return 4
+
+
+class DeviceType(_Serializer):
+    @staticmethod
+    def unpack(value):
+        value = bytes([value]) #need to cast as byte
+        ret = DigitalInputDeviceByte()
+        [
+            ret.extra_bit,
+            ret.enable,
+            ret.reset,
+            ret.clock
+        ] = bitstruct.unpack('b1u2u2u3', value)
+        return ret
+
+    @staticmethod
+    def pack(data):
+        """Put back the bits together into a format accepted by device_type in sensor descriptor
+
+        :param data: modified DigitalInputDeviceByte
+        :return: value for device_type in sensordescriptor
+        """
+        assert(type(data) is DigitalInputDeviceByte)
+        value = bitstruct.pack('b1u2u2u3',
+                               data.extra_bit,
+                               data.enable,
+                               data.reset,
+                               data.clock)
+        value = int.from_bytes(value, 'little')
+        return value
+    @staticmethod
+    def size():
+        return 1
 
 
 class _SystemStatusSer(_Serializer):
