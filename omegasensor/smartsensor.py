@@ -2,7 +2,9 @@ import bitstruct, struct
 import threading
 import logging
 from .bus import Bus
-#from .interrupt import *
+from sys import platform
+if platform != "win32": #do not import rasberry pi library for windows
+    from .interrupt import *
 from .registers import *
 
 

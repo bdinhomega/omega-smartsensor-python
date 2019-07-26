@@ -5,18 +5,26 @@
 ## Requirements    
  Python 3.5+    
     
-## Installation & Usage    
- ### pip install    
- The package can be installed by running:    
+## Installation & Usage
+ ### PC Install    
+
+ #### pip install    
+ When installing python, ensure the option to add python to PATH is checked.
+ If python is not part of the PATH, in command prompt change directory to the location of python.exe.
+ Execute the pip install command.     
     
-`pip install omegasensor `    
- Then import the package:    
-    
-`from omegasensor import *`    
- ### Setuptools    
+`python -m pip install omegasensor `    
+   
+ #### Setuptools    
+ Another method to install omegasensor. Clone from repository. And Install via Setuptools from source directory:    
+ 
+`python setup.py install --user`   
+ ### Raspberry Pi Install
+ #### Setuptools    
  Clone from repository. And Install via Setuptools from source directory:    
-    
-`python setup.py install --user`    
+ 
+`python3 setup.py install --user`       
+  
  ## Getting started    
       
     import time
