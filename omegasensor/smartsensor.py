@@ -407,8 +407,8 @@ _def = {
     R.IO_COUNT:                 {"Modbus": 0xf00d, "I2C": 0x1A,  "Access": _RO, "Data": _DataIoCount},
     R.OPERATING_PARAM:          {"Modbus": 0xf00e, "I2C": 0x1C, "Access": _RO, "Data": _DataOperatingParam},
     R.FAULT_PARAM:              {"Modbus": 0xf00f, "I2C": 0x1E, "Access": _RO, "Data": _DataFaultParam},
-    R.EVENT_0_TIMER:            {"Modbus": 0xf010, "I2C": 0x20, "Access": _RO, "Data": _DataUInt16},
-    R.EVENT_1_TIMER:            {"Modbus": 0xf011, "I2C": 0x22, "Access": _RO, "Data": _DataUInt16},
+    R.EVENT_0_TIMER:            {"Modbus": 0xf010, "I2C": 0x20, "Access": _RW, "Data": _DataUInt16},
+    R.EVENT_1_TIMER:            {"Modbus": 0xf011, "I2C": 0x22, "Access": _RW, "Data": _DataUInt16},
     R.SYSTEM_STATUS:            {"Modbus": 0xf012, "I2C": 0x24,  "Access": _RO, "Data": _SystemStatusSer},
     R.TRIGGER_REQUESTS:         {"Modbus": 0xf013, "I2C": 0x26,  "Access": _RW, "Data": _DataUInt16}, # Trigger
     R.EXTRACT_START_TIME:       {"Modbus": 0xf014, "I2C": 0x28, "Access": _RW, "Data": _DataUInt32},
@@ -416,10 +416,10 @@ _def = {
     R.NUMBER_OF_RECORDS:        {"Modbus": 0xf01b, "I2C": 0x36,  "Access": _RO, "Data": _DataUInt16},
     R.CURRENT_TIME:             {"Modbus": 0xf01c, "I2C": 0x38,  "Access": _RW, "Data": _DataTimeSer},
 
-    R.SENSOR_0_DATA:            {"Modbus": 0xf01e, "I2C": 0x3C, "Access": _RO, "Data": _DataFloat},
-    R.SENSOR_1_DATA:            {"Modbus": 0xf020, "I2C": 0x40, "Access": _RO, "Data": _DataFloat},
-    R.SENSOR_2_DATA:            {"Modbus": 0xf022, "I2C": 0x44, "Access": _RO, "Data": _DataFloat},
-    R.SENSOR_3_DATA:            {"Modbus": 0xf024, "I2C": 0x48, "Access": _RO, "Data": _DataFloat},
+    R.SENSOR_0_DATA:            {"Modbus": 0xf01e, "I2C": 0x3C, "Access": _RW, "Data": _DataFloat},
+    R.SENSOR_1_DATA:            {"Modbus": 0xf020, "I2C": 0x40, "Access": _RW, "Data": _DataFloat},
+    R.SENSOR_2_DATA:            {"Modbus": 0xf022, "I2C": 0x44, "Access": _RW, "Data": _DataFloat},
+    R.SENSOR_3_DATA:            {"Modbus": 0xf024, "I2C": 0x48, "Access": _RW, "Data": _DataFloat},
     R.EXTRACTED_TIME_STAMP:     {"Modbus": 0xf026, "I2C": 0x4C,  "Access": _RO, "Data": _DataUInt32},
 
     R.EXTRACTED_DATA_0:         {"Modbus": 0xf028, "I2C": 0x50, "Access": _RO, "Data": _DataFloat},

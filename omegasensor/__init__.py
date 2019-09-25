@@ -1,5 +1,5 @@
 __PACKAGE__ = "omegasensor"
-__VERSION__ = "0.3"
+__VERSION__ = "0.4"
 
 from .interface import Smartsensor
 try:

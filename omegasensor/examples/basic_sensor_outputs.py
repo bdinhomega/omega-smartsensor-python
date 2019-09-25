@@ -4,7 +4,7 @@ from omegasensor import *
 
 def main():
     # use Modbus interface
-    bus = BusModbus('/dev/ttyACM0', SMARTSENSOR_MODBUS_ADDR)
+    bus = BusModbus('COM19', SMARTSENSOR_MODBUS_ADDR)
 
     # use I2C interface
     #bus = BusI2C(3, SMARTSENSOR_I2C_ADDR)
@@ -20,7 +20,7 @@ def main():
     print("On-board %d outputs" % io_count.outputs)
 
     sensor_units = [ss.sensor_unit(i) for i in range(io_count.sensors)]
-
+    sensor_outputs = [R.OUTPUT_0, R.OUTPUT_1]
     while True:
         print("Time: ", ss.current_time_str())
         for i in range(io_count.sensors):
@@ -28,7 +28,12 @@ def main():
                   " %s" % sensor_units[i],
                   "\t", end='')
         print('\n')
-        time.sleep(1)
+        for i in range(io_count.outputs):
+            ss.write(sensor_outputs[i],100)
+            time.sleep(1)
+            ss.write(sensor_outputs[i],0)
+            time.sleep(1)
+
 
 
 if __name__ == "__main__":
