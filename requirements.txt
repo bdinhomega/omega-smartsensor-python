@@ -1,2 +1,2 @@
-MinimalModbus>=0.7
+MinimalModbus>=1.0.2
 bitstruct>=7.1.0

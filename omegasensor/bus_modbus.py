@@ -14,6 +14,7 @@ class BusModbus(Bus):
         """
         super().__init__(Bus.Type.Modbus, dev_addr)
         self.bus = minimalmodbus.Instrument(bus_id, self.dev_addr)
+        self.bus_id = bus_id
         self.bus.serial.baudrate = 38400
         self.bus.serial.bytesize = 8
         self.bus.serial.parity = serial.PARITY_EVEN
@@ -39,10 +40,14 @@ class BusModbus(Bus):
         :param reg_addr: modbus address
         :param data: data in bytes
         """
-        assert(type(data) is list)
+        assert (type(data) is list)
         bus_logger.debug("Write 0x%04x => %s" % (reg_addr, data))
         num_reg = int((len(data) + 1) / 2)
         if len(data) % 2 == 1:
             data.append(0)
-        values = [(data[2*i] << 8) + data[2*i+1] for i in range(num_reg)]
+        values = [(data[2 * i] << 8) + data[2 * i + 1] for i in range(num_reg)]
         self.bus.write_registers(reg_addr, values)
+
+    def close(self):
+        self.bus.serial.close()
+

@@ -412,7 +412,7 @@ _def = {
     R.SYSTEM_STATUS:            {"Modbus": 0xf012, "I2C": 0x24,  "Access": _RO, "Data": _SystemStatusSer},
     R.TRIGGER_REQUESTS:         {"Modbus": 0xf013, "I2C": 0x26,  "Access": _RW, "Data": _DataUInt16}, # Trigger
     R.EXTRACT_START_TIME:       {"Modbus": 0xf014, "I2C": 0x28, "Access": _RW, "Data": _DataUInt32},
-    R.EXTRACT_END_TIME:         {"Modbus": 0xf015, "I2C": 0x2C,  "Access": _RW, "Data": _DataUInt32},
+    R.EXTRACT_END_TIME:         {"Modbus": 0xf016, "I2C": 0x2C,  "Access": _RW, "Data": _DataUInt32},
     R.NUMBER_OF_RECORDS:        {"Modbus": 0xf01b, "I2C": 0x36,  "Access": _RO, "Data": _DataUInt16},
     R.CURRENT_TIME:             {"Modbus": 0xf01c, "I2C": 0x38,  "Access": _RW, "Data": _DataTimeSer},
 
@@ -453,6 +453,23 @@ _def = {
     R.OUTPUT_1:                 {"Modbus": 0xf07a, "I2C": 0xF4, "Access": _RW, "Data": _DataFloat},
     R.OUTPUT_2:                 {"Modbus": 0xf07c, "I2C": 0xF8, "Access": _RW, "Data": _DataFloat},
     R.OUTPUT_3:                 {"Modbus": 0xf07e, "I2C": 0xFC, "Access": _RW, "Data": _DataFloat},
+
+    R.USER_PARAMETER_0:         {"Modbus": 0xf040, "I2C": 0x80, "Access": _RW, "Data": _DataFloat},
+    R.USER_PARAMETER_1:         {"Modbus": 0xf042, "I2C": 0x84, "Access": _RW, "Data": _DataFloat},
+    R.USER_PARAMETER_2:         {"Modbus": 0xf044, "I2C": 0x88, "Access": _RW, "Data": _DataFloat},
+    R.USER_PARAMETER_3:         {"Modbus": 0xf046, "I2C": 0x8C, "Access": _RW, "Data": _DataFloat},
+    R.USER_PARAMETER_4:         {"Modbus": 0xf048, "I2C": 0x90, "Access": _RW, "Data": _DataFloat},
+    R.USER_PARAMETER_5:         {"Modbus": 0xf04a, "I2C": 0x94, "Access": _RW, "Data": _DataFloat},
+    R.USER_PARAMETER_6:         {"Modbus": 0xf04c, "I2C": 0x98, "Access": _RW, "Data": _DataFloat},
+    R.USER_PARAMETER_7:         {"Modbus": 0xf04e, "I2C": 0x9C, "Access": _RW, "Data": _DataFloat},
+    R.USER_PARAMETER_8:         {"Modbus": 0xf050, "I2C": 0xA0, "Access": _RW, "Data": _DataFloat},
+    R.USER_PARAMETER_9:         {"Modbus": 0xf052, "I2C": 0xA4, "Access": _RW, "Data": _DataFloat},
+    R.USER_PARAMETER_10:        {"Modbus": 0xf054, "I2C": 0xA8, "Access": _RW, "Data": _DataFloat},
+    R.USER_PARAMETER_11:        {"Modbus": 0xf056, "I2C": 0xAC, "Access": _RW, "Data": _DataFloat},
+    R.USER_PARAMETER_12:        {"Modbus": 0xf058, "I2C": 0xB0, "Access": _RW, "Data": _DataFloat},
+    R.USER_PARAMETER_13:        {"Modbus": 0xf05a, "I2C": 0xB4, "Access": _RW, "Data": _DataFloat},
+    R.USER_PARAMETER_14:        {"Modbus": 0xf05c, "I2C": 0xB8, "Access": _RW, "Data": _DataFloat},
+    R.USER_PARAMETER_15:        {"Modbus": 0xf05e, "I2C": 0xBC, "Access": _RW, "Data": _DataFloat},
 
     # Manufacturing registers
     R.LONG_DEVICE_ID:           {"Modbus": 0xf080, 'I2C': 0x100, "Access": _RO, "Data": _DataUInt32},
