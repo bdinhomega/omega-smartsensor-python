@@ -199,7 +199,7 @@ class SensorType:
         E = 0x03
         N = 0x04
         DIN_J = 0x05
-        RO = 0x06
+        R = 0x06
         S = 0x07
         B = 0x08
         C = 0x09
@@ -526,7 +526,7 @@ class R(Enum):
     OUTPUT_0        = 'OUTPUT_0'
     OUTPUT_1        = 'OUTPUT_1'
     OUTPUT_2        = 'OUTPUT_2'
-    OUTPUT_3        = 'O "UTPUT_3'
+    OUTPUT_3        = 'OUTPUT_3'
 
     USER_PARAMETER_0 = "USER_PARAMETER_0"
     USER_PARAMETER_1 = "USER_PARAMETER_1"
