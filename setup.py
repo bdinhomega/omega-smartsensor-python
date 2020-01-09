@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='omegasensor',
-    version='0.4',
+    version='0.5',
     author="Binh Dinh",
     author_email="bdinh@omega.com",
     description="Omega Smartsensor Python SDK",
