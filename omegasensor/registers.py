@@ -121,6 +121,7 @@ class MeasurementType(Enum):
     Serial = 0x30
     AdcCount = 0x31
 
+    heatflux = 0x35
 
 class SensorDevice:
     NULL = 0
